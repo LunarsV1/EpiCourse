@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disease Detectives: course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400&family=Literata:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e7f0ee;--surface:#f7fbfa;--ink:#0c2a2c;--muted:#46635f;--accent:#0b7a75;--accent-ink:#fff;--line:#b9d0cc;--ok:#1d7a4a;--bad:#b3261e;--g0:#d3e3df;--g1:#b7e4c7;--g2:#74c69d;--g3:#40916c;--g4:#1b4332;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08201f;--surface:#0f2f2d;--ink:#e3f2ef;--muted:#96b8b3;--accent:#3fd0c4;--accent-ink:#03211f;--line:#1f4744;--ok:#5fd394;--bad:#ff8f86;--g0:#1c3a38;--g1:#1d5a3f;--g2:#2b8a5c;--g3:#43b57e;--g4:#7be0ae;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#08201f;--surface:#0f2f2d;--ink:#e3f2ef;--muted:#96b8b3;--accent:#3fd0c4;--accent-ink:#03211f;--line:#1f4744;--ok:#5fd394;--bad:#ff8f86;--g0:#1c3a38;--g1:#1d5a3f;--g2:#2b8a5c;--g3:#43b57e;--g4:#7be0ae;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.7 Literata,Georgia,serif}
+h1,h2,h3,button,.ui{font-family:"IBM Plex Sans",system-ui,sans-serif}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:320px 1fr;height:100%}
+aside{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.brand{padding:1.1rem 1.25rem .5rem;font:800 1.15rem "IBM Plex Sans",sans-serif}
+.prog{padding:0 1.25rem 1rem;font:500 .85rem "IBM Plex Sans",sans-serif;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-bottom:.4rem;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+nav{overflow:auto;flex:1;padding:0 .5rem}
+details{margin-bottom:.15rem}
+summary{cursor:pointer;padding:.55rem .75rem;font:800 .95rem "IBM Plex Sans",sans-serif;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";display:inline-block;width:1.1em;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+nav a{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem .75rem .45rem 1.9rem;margin:1px 0;border-radius:6px;color:var(--ink);text-decoration:none;font:500 .95rem/1.35 "IBM Plex Sans",sans-serif}
+nav a:hover{background:var(--bg)}
+nav a[aria-current=page]{background:var(--accent);color:var(--accent-ink)}
+.dot{flex:none;width:16px;height:16px;margin-top:2px;border:2px solid var(--muted);border-radius:50%;font-size:10px;line-height:12px;text-align:center}
+.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.done .dot::after{content:"✓"}
+.kind{color:var(--muted);font-weight:400;font-size:.8rem}
+[aria-current=page] .kind{color:inherit}
+.side-foot{padding:.75rem 1.25rem;border-top:1px solid var(--line);font:500 .85rem "IBM Plex Sans",sans-serif;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}
+main{overflow:auto;padding:2rem 2.5rem 4rem}
+.col{max-width:68ch;margin:0 auto}
+.top{display:none}
+.crumb{color:var(--muted);font:500 .95rem "IBM Plex Sans",sans-serif;margin:0}
+h1{font-weight:800;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.1;letter-spacing:-.02em;margin:.3rem 0 .6rem}
+.tm{font:500 .9rem "IBM Plex Sans",sans-serif;color:var(--muted);margin-bottom:1.5rem}
+.body p{margin:0 0 1rem}.body h2{font:800 1.4rem "IBM Plex Sans",sans-serif;margin:1.8rem 0 .5rem}.body ul{margin:0 0 1rem;padding-left:1.4rem}
+.key{background:var(--surface);border-left:4px solid var(--accent);padding:.9rem 1.1rem;margin:1.5rem 0;border-radius:0 8px 8px 0}
+.key p{margin:0}
+.ph{color:var(--muted);font-style:italic;border:1px dashed var(--line);border-radius:8px;padding:1rem 1.25rem}
+fieldset{border:1px solid var(--line);border-radius:10px;background:var(--surface);margin:0 0 1rem;padding:1rem 1.25rem}
+legend{font:800 1.05rem "IBM Plex Sans",sans-serif;padding:0 .4rem}
+fieldset label{display:block;padding:.3rem 0;cursor:pointer}
+fieldset.right{border-color:var(--ok)}fieldset.wrong{border-color:var(--bad)}
+.fb{margin:.6rem 0 0;font-size:.98rem;color:var(--muted)}
+.score{font:800 1.3rem "IBM Plex Sans",sans-serif;margin:1rem 0}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:.8rem 1.4rem;font:500 1rem "IBM Plex Sans",sans-serif;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.pager{display:flex;justify-content:space-between;gap:1rem;margin-top:2.5rem;flex-wrap:wrap}
+body:not(.in-course) .app{display:none}
+body.in-course #home{display:none}
+body:not(.in-course){height:auto}
+#home{max-width:880px;margin:0 auto;padding:3rem 1.5rem 4rem}
+#home .lede{font-size:1.2rem;color:var(--muted);max-width:56ch;margin:.5rem 0 1.5rem}
+#home h2{font:800 1.5rem "IBM Plex Sans",sans-serif;margin:2.5rem 0 1rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:2rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem}
+.stat b{display:block;font:800 1.8rem "IBM Plex Sans",sans-serif}
+.stat span{color:var(--muted);font:500 .9rem "IBM Plex Sans",sans-serif}
+#heat{display:grid;grid-template-rows:repeat(7,auto);grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;max-width:560px}
+.cell{display:block;aspect-ratio:1;border-radius:3px;background:var(--g0)}
+.cell.l1{background:var(--g1)}.cell.l2{background:var(--g2)}.cell.l3{background:var(--g3)}.cell.l4{background:var(--g4)}.cell.fut{background:none}
+.lg{display:flex;align-items:center;gap:4px;margin-top:.75rem;font:500 .85rem "IBM Plex Sans",sans-serif;color:var(--muted)}
+.lg .cell{width:14px;height:14px;aspect-ratio:auto}
+.fine{color:var(--muted);font-size:.95rem;margin-top:1rem}
+.homelink{display:block;padding:0 1.25rem .6rem;color:var(--muted);font:500 .85rem "IBM Plex Sans",sans-serif}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;inset:0 20% 0 0;z-index:20;transform:translateX(-102%);transition:transform .2s;box-shadow:2px 0 20px rgba(0,0,0,.25)}
+  body.open aside{transform:none}
+  main{padding:1rem 1.25rem 4rem}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+:root{--hot:#c2410c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hot:#ff8a5b}}
+:root[data-theme="dark"]{--hot:#ff8a5b}
+h1,h2,.price,.stat b,#home h2,.body h2,.brand{font-family:Fraunces,Georgia,serif;font-weight:800;letter-spacing:-.015em}
+.crumb,.stat span,.tm,.kind,.lg,.meta{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.chart .idx{fill:var(--hot)}.chart .note{fill:var(--hot)}
+.btn{border-radius:2px}
+.tag{display:inline-block;border:1px solid var(--ink);padding:.15rem .6rem;font:400 .8rem "IBM Plex Mono",ui-monospace,monospace;margin:0 0 1rem}
+body:not(.in-course){background-image:radial-gradient(color-mix(in srgb,var(--ink) 14%,transparent) 1px,transparent 1.3px);background-size:24px 24px}
+.hero2{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center}
+.net{width:100%;max-width:340px;justify-self:center}
+.nd{transform-box:fill-box;transform-origin:center;animation:pop .5s both;animation-delay:calc(var(--i)*140ms)}
+@keyframes pop{from{opacity:0;transform:scale(.3)}}
+@media (max-width:700px){.hero2{grid-template-columns:1fr}.net{max-width:260px}}
+@media (prefers-reduced-motion:reduce){.nd{animation:none}}
+.heatwrap{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;max-width:620px}
+#months{display:grid;grid-template-columns:repeat(17,1fr);gap:4px;font:400 .72rem "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);height:1.1rem}
+#months span{white-space:nowrap}
+#wd{display:grid;grid-template-rows:repeat(7,1fr);gap:4px;font:400 .72rem "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);align-items:center}
+.heatwrap #heat{max-width:none}
+#recent{list-style:none;margin:0;padding:0;max-width:620px}
+#recent li{display:flex;flex-wrap:wrap;gap:.25rem .75rem;align-items:center;padding:.6rem 0;border-top:1px solid var(--line);font:400 .9rem "IBM Plex Mono",ui-monospace,monospace}
+#recent .cell{width:14px;height:14px;aspect-ratio:auto;flex:none}
+#recent b{font-weight:500}
+#recent span{color:var(--muted)}
+.cform{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;align-items:end;margin-top:1.5rem;max-width:760px;background:var(--surface);border:1px solid var(--line);padding:1.25rem;border-radius:10px}
+.cform label{font:500 .85rem "IBM Plex Sans",sans-serif;display:grid;gap:.3rem}
+.cform input,.cform select{font:inherit;font-size:1rem;padding:.65rem .75rem;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);width:100%}
+.cform .btn{grid-column:1/-1;justify-self:start}
+#cmsg{grid-column:1/-1;margin:0;min-height:1.2em}
+@media (max-width:700px){.cform{grid-template-columns:1fr 1fr}}
+.res{list-style:none;margin:1rem 0 0;padding:0;max-width:760px}
+.res li{display:flex;align-items:center;gap:1rem;padding:.8rem 0;border-top:1px solid var(--line)}
+.res li div{flex:1;display:grid}
+.res b{font:700 1.05rem "IBM Plex Sans",sans-serif}
+.res span{color:var(--muted);font:400 .85rem "IBM Plex Mono",ui-monospace,monospace}
+.res em{font:500 .95rem "IBM Plex Mono",ui-monospace,monospace;font-style:normal;color:var(--accent)}
+.rm{font-size:.85rem}
+.res li.major{background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:8px;padding:1rem .75rem;border-top-color:transparent;margin-top:.4rem}
+.major .bdg{width:68px;height:68px}
+.major b{font-size:1.2rem}
+#season .stat b{font-size:1.3rem}
+.bdg{position:relative;flex:none;width:56px;height:56px;display:block}
+.bdg svg{width:100%;height:100%;display:block}
+.spark::before,.spark::after{content:"✦";position:absolute;color:#e0a800;font-size:14px;animation:tw 1.8s ease-in-out infinite}
+.spark::before{top:-6px;right:-4px}
+.spark::after{bottom:-4px;left:-6px;animation-delay:.9s;font-size:11px}
+.glow svg{filter:drop-shadow(0 0 6px #e0a800)}
+@keyframes tw{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.spark::before,.spark::after{animation:none}}
+.awh{display:flex;justify-content:space-between;align-items:baseline;max-width:760px;font:700 1.05rem "IBM Plex Sans",sans-serif;margin:1.5rem 0 .6rem}
+.awh span{font:400 .85rem "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
+.awg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.75rem;max-width:760px}
+.aw{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem .8rem;text-align:center;display:grid;justify-items:center;gap:.2rem;align-content:start}
+.aw .bdg{margin-bottom:.4rem}
+.aw b{font:700 .95rem "IBM Plex Sans",sans-serif}
+.aw span{color:var(--muted);font-size:.82rem;line-height:1.35}
+.aw em{font:400 .75rem "IBM Plex Mono",ui-monospace,monospace;font-style:normal;color:var(--accent);margin-top:.3rem}
+.aw .tg{font:400 .7rem "IBM Plex Mono",ui-monospace,monospace;color:var(--accent);margin-bottom:.2rem}
+.aw.lock{opacity:.75}.aw.lock em{color:var(--muted)}
+.aw .glow svg{filter:drop-shadow(0 0 6px #5fd6e8)}
+#toast{position:fixed;left:50%;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,200%);background:var(--ink);color:var(--bg);padding:.8rem 1.2rem;border-radius:8px;font:500 .95rem "IBM Plex Sans",sans-serif;transition:transform .3s;z-index:50;max-width:90vw;text-align:center}
+#toast.on{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<section id="home" aria-label="Course home">
+  <div class="hero2"><div>
+  <p class="tag">Case file 001: free course</p>
+  <h1>Disease Detectives</h1>
+  <p class="lede">A self-paced epidemiology course written like an approachable textbook, with quizzes, an assignment, and a role play. Built for HOSA Disease Detectives competitors.</p>
+  <button class="btn" id="enter">Start the course</button>
+  </div>
+  <svg class="net" viewBox="0 0 300 240" role="img" aria-label="A contact network spreading outward from one index case">
+    <g stroke="var(--muted)" stroke-width="1.5" opacity=".55" fill="none">
+      <path d="M150 120L90 70M150 120L210 60M150 120L230 150M150 120L160 200M150 120L70 160M90 70L35 95M210 60L265 25M210 60L190 20M230 150L275 190M160 200L110 225M70 160L30 200M210 60L230 150M70 160L35 95"/>
+    </g>
+    <g stroke="var(--muted)" stroke-width="2" fill="var(--bg)">
+      <circle class="nd" style="--i:6" cx="35" cy="95" r="7"/><circle class="nd" style="--i:7" cx="265" cy="25" r="7"/><circle class="nd" style="--i:8" cx="275" cy="190" r="7"/>
+      <circle class="nd" style="--i:9" cx="110" cy="225" r="7"/><circle class="nd" style="--i:10" cx="30" cy="200" r="7"/><circle class="nd" style="--i:11" cx="190" cy="20" r="7"/>
+    </g>
+    <g fill="var(--accent)">
+      <circle class="nd" style="--i:1" cx="90" cy="70" r="10"/><circle class="nd" style="--i:2" cx="210" cy="60" r="10"/><circle class="nd" style="--i:3" cx="230" cy="150" r="10"/>
+      <circle class="nd" style="--i:4" cx="160" cy="200" r="10"/><circle class="nd" style="--i:5" cx="70" cy="160" r="10"/>
+    </g>
+    <circle class="nd" style="--i:0" cx="150" cy="120" r="14" fill="var(--hot)"/>
+  </svg></div>
+  <div class="stats" id="stats"></div>
+  <h2>Your activity</h2>
+  <div class="heatwrap"><span></span><div id="months"></div><div id="wd"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div><div id="heat" role="img" aria-label="Your study activity over the last 17 weeks"></div></div>
+  <div class="lg"><span>Less</span><i class="cell l0"></i><i class="cell l1"></i><i class="cell l2"></i><i class="cell l3"></i><i class="cell l4"></i><span>More</span></div>
+  <p class="fine" id="today"></p>
+  <p class="fine">Each square is a day. The more you study and complete, the greener it gets. Your progress is saved in this browser on this device.</p>
+  <h2>Recent activity</h2>
+  <ul id="recent"></ul>
+  <h2>Awards</h2>
+  <p class="fine">Earn awards for working through the course and for competing. Awards are grouped by difficulty, from bronze to diamond, and the shape gets fancier as they get harder.</p>
+  <div id="awards"></div>
+  <h2>Your competition season</h2>
+  <p class="fine">Log your results so far this season. Shapes show the level (circle: invitational, hexagon: regionals/RLC, shield: states/SLC, star: nationals), and gold, silver, and bronze mark 1st to 3rd. States and Nationals are worth far more points than Invitationals and Regionals, and their badges stand out in the list.</p>
+  <div id="season"></div>
+  <form id="cf" class="cform" novalidate>
+    <label>Level<select id="clvl"><option value="inv">Invitational</option><option value="reg">Regionals (RLC)</option><option value="st">States (SLC)</option><option value="nat">Nationals (ILC)</option></select></label>
+    <label>Place (1 = first)<input id="cpl" type="number" min="1" max="99" inputmode="numeric" placeholder="1"></label>
+    <label>Event (optional)<input id="cev" type="text" maxlength="40" placeholder="Disease Detectives"></label>
+    <label>Date<input id="cdt" type="date"></label>
+    <button class="btn" type="submit">Add result</button>
+    <p class="fine" id="cmsg" role="status"></p>
+  </form>
+</section>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="app">
+  <aside id="side" aria-label="Course contents">
+    <div class="brand">Disease Detectives</div>
+    <a class="homelink" href="#home">← Home and activity</a>
+    <div class="prog"><div class="bar"><i id="pb"></i></div><span id="pt"></span></div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><span id="tt"></span><button class="link" id="reset">Reset progress</button></div>
+  </aside>
+  <main id="main" tabindex="-1">
+    <div class="top"><button class="btn alt" id="menu">Contents</button><span class="ui" id="pt2"></span></div>
+    <div class="col" id="view"></div>
+  </main>
+</div>
+<script>
+var UNITS=[
+["Introduction to the course",[["l","Introduction"]]],
+["Introduction to epidemiology",[["l","What is epidemiology?"],["l","Clinical vs. public health"],["l","Terminology"],["l","Natural history and spectrum of disease"],["l","Determinants and infectious/noninfectious diseases"],["q","Unit 2 quiz"]]],
+["Epidemiological history",[["l","Introduction to epidemiological history"],["l","Epidemiologists"],["l","Health events"],["q","Unit 3 quiz"]]],
+["Disease transmission and prevention strategies",[["l","Agent–host–environment triad"],["l","Chain of infection"],["l","Modes of transmission"],["l","Prevention for different agents"],["a","Unit 4 assignment"]]],
+["Public health surveillance",[["l","Basics of surveillance"],["l","5 steps of surveillance"],["l","Surveillance technologies"],["r","Role play: seek an unknown pathogen"]]],
+["Epidemiological data and visualization",[["l","Epi curves"],["l","Subdivided tables"],["l","Line listings"],["l","Cluster maps"],["q","Unit 6 quiz"]]],
+["Epidemiological calculations",[["l","Measures of disease frequency"],["l","Measures of effect"],["l","The “rates” formula and diagnostic accuracy measures"],["q","Unit 7 test"]]],
+["Coming soon",[]],
+["Coming soon",[]],
+["Coming soon",[]],
+["Coming soon",[]],
+["Coming soon",[]],
+["Coming soon",[]]
+];
+var KIND={l:"Lesson",q:"Quiz",a:"Assignment",r:"Role play"};
+/* ===== YOUR MATERIAL GOES HERE =====
+   Lessons: CONTENT, keyed by id (l1, l2 ... for lessons, a1 for the assignment, r1 for the role play).
+   Write plain text. Blank line = new paragraph. "## " = subheading. "- " = bullet. "> " = key-idea box. **bold**, *italic*.
+   Quizzes: QUIZ, keyed q1, q2 ... in order. Q: = question, - = wrong answer, * = right answer, ? = explanation. */
+var CONTENT={
+l2:`
+Epidemiology is the study of how often diseases and other health events happen in groups of people, and why. Epidemiologists look for patterns, then use them to prevent illness.
+
+The work starts with a question: who is getting sick, where, and when? The answers point toward a cause and a way to stop it.
+
+> **Key idea:** epidemiology studies populations, not individual patients.
+`
+};
+var QUIZ={
+q1:`
+Q: A disease that is always present at a steady baseline level in an area is called:
+* Endemic
+- Epidemic
+- Pandemic
+- Sporadic
+? Endemic means a constant, expected presence. An epidemic is a rise above what is expected.
+
+Q: Which of these is a noninfectious disease?
+- Measles
+- Cholera
+* Type 2 diabetes
+- Influenza
+? Type 2 diabetes is not caused by an infectious agent.
+
+Q: Epidemiology mainly studies:
+- Single patients
+* Patterns of disease in populations
+- Lab equipment
+- Hospital billing
+? The focus is on populations and the patterns of health events within them.
+`,
+q3:`
+Q: The horizontal (x) axis of an epi curve shows:
+- Age
+* Time
+- Place
+- Deaths
+? An epi curve plots the number of cases over time.
+
+Q: In a line listing, each row represents:
+- A day
+- A town
+* One case
+- One lab test
+? A line listing has one row per case, with columns for details like onset date and symptoms.
+`
+};
+/* ===== END OF YOUR MATERIAL ===== */
+function inl(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\*(.+?)\*/g,"<em>$1</em>")}
+function md(t){return t.trim().split(/\n\s*\n/).map(function(b){b=b.trim();
+ if(b.indexOf("> ")===0)return '<div class="key"><p>'+inl(b.replace(/^> ?/gm,"").replace(/\n/g," "))+'</p></div>';
+ if(b.indexOf("## ")===0)return '<h2>'+inl(b.slice(3))+'</h2>';
+ if(b.indexOf("- ")===0)return '<ul>'+b.split("\n").map(function(l){return '<li>'+inl(l.replace(/^- /,""))+'</li>'}).join("")+'</ul>';
+ return '<p>'+inl(b.replace(/\n/g," "))+'</p>'}).join("")}
+function quizOf(id){
+  if(!QUIZ[id])return null;var qs=[],c=null;
+  QUIZ[id].split("\n").forEach(function(l){l=l.trim();
+    if(l.indexOf("Q:")===0){c={q:inl(l.slice(2).trim()),o:[],a:0,e:""};qs.push(c)}
+    else if(c&&(l[0]==="-"||l[0]==="*")){if(l[0]==="*")c.a=c.o.length;c.o.push(inl(l.slice(1).trim()))}
+    else if(c&&l[0]==="?")c.e=inl(l.slice(1).trim())});
+  return qs.length?qs:null}
+var ITEMS=[],n={l:0,q:0,a:0,r:0};
+UNITS.forEach(function(u,ui){u[1].forEach(function(it){var k=it[0];n[k]++;ITEMS.push({id:k+n[k],k:k,t:it[1],u:ui,num:n[k]})})});
+var LESSONS=ITEMS.filter(function(i){return i.k==="l"}).length;
+var KEY="dd-course-v1",S={done:{},time:{},best:{},last:null,days:{},comp:[],aw:{}};
+try{var raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){persist();awards()}
+var $=function(i){return document.getElementById(i)};
+function dk(d){d=d||new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function day(){var k=dk();return S.days[k]||(S.days[k]={s:0,c:0})}
+function markDone(id){if(!S.done[id]){S.done[id]=true;day().c++}save()}
+/* Day level: minutes studied plus 5 points per item completed. 1 to 4 = lighter to darker green. */
+function lvl(d){if(!d)return 0;var sc=d.s/60+5*d.c;return sc<1?0:sc<5?1:sc<15?2:sc<30?3:4}
+function streak(){var d=new Date();d.setHours(12,0,0,0);if(!lvl(S.days[dk(d)]))d.setDate(d.getDate()-1);var n=0;while(lvl(S.days[dk(d)])){n++;d.setDate(d.getDate()-1)}return n}
+function heat(){
+  var t=new Date();t.setHours(12,0,0,0);var W=17,start=new Date(t);start.setDate(t.getDate()-t.getDay()-(W-1)*7);
+  var h="",on=0;
+  for(var i=0;i<W*7;i++){var d=new Date(start);d.setDate(start.getDate()+i);
+    if(d>t){h+='<i class="cell fut"></i>';continue}
+    var r=S.days[dk(d)],l=lvl(r);if(l)on++;
+    h+='<i class="cell l'+l+'" title="'+d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"})+': '+(r?Math.round(r.s/60):0)+' min, '+(r?r.c:0)+' completed"></i>'}
+  $("heat").innerHTML=h;$("heat").setAttribute("aria-label","Your study activity over the last 17 weeks: "+on+" active days")}
+function st(a,b){return '<div class="stat"><b>'+a+'</b><span>'+b+'</span></div>'}
+function lists(){
+  var t=new Date();t.setHours(12,0,0,0);var W=17,start=new Date(t);start.setDate(t.getDate()-t.getDay()-(W-1)*7);
+  var m="",prev=-1,c,d;
+  for(c=0;c<W;c++){d=new Date(start);d.setDate(start.getDate()+c*7);var mo=d.getMonth();m+='<span>'+(mo!==prev?d.toLocaleDateString(undefined,{month:"short"}):"")+'</span>';prev=mo}
+  $("months").innerHTML=m;
+  var ks=Object.keys(S.days).filter(function(k){return lvl(S.days[k])}).sort().reverse().slice(0,10),r="";
+  ks.forEach(function(k){var p=k.split("-"),dt=new Date(+p[0],+p[1]-1,+p[2]),x=S.days[k];
+    r+='<li><i class="cell l'+lvl(x)+'"></i><b>'+dt.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"})+'</b><span>'+Math.round(x.s/60)+' min studied, '+x.c+' completed</span></li>'});
+  $("recent").innerHTML=r||'<li><span>No activity yet. The days you study will be listed here.</span></li>'}
+var LV={inv:["Invitational",1],reg:["Regionals (RLC)",2],st:["States (SLC)",8],nat:["Nationals (ILC)",15]};
+function ord(n){var s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+/* Points: level weight (invitational 1, regionals 2, states 8, nationals 15) times a placement score (1st 10, 2nd 8, 3rd 6, top 5 = 4, top 10 = 2, else 1). */
+function pts(x){var p=x.pl,ps=p===1?10:p===2?8:p===3?6:p<=5?4:p<=10?2:1;return LV[x.lvl][1]*ps}
+function badge(x){
+  var m=x.pl===1?"#e0a800":x.pl===2?"#a9b4b8":x.pl===3?"#b8733a":"var(--line)",
+  sh={inv:'<circle cx="24" cy="24" r="20"',reg:'<polygon points="24,3 43,14 43,34 24,45 5,34 5,14"',st:'<path d="M24 3L42 10V24C42 35 34 42 24 46C14 42 6 35 6 24V10Z"',nat:'<polygon points="24,2 30,18 47,18 33,28 38,45 24,35 10,45 15,28 1,18 18,18"'}[x.lvl],
+  top=LV[x.lvl][1]>=8&&x.pl<=3;
+  return '<span class="bdg'+(top?' spark':'')+(x.lvl==="nat"&&x.pl<=3?' glow':'')+'"><svg viewBox="0 0 48 48" aria-hidden="true">'+sh+' fill="'+m+'" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><text x="24" y="'+(x.lvl==="nat"?31:29)+'" text-anchor="middle" font-size="15" font-weight="700" font-family="IBM Plex Sans,sans-serif" fill="'+(x.pl<=3?"#1a1a1a":"var(--ink)")+'">'+x.pl+'</text></svg></span>'}
+function season(){
+  var a=(S.comp||[]).slice().sort(function(x,y){return y.date<x.date?-1:y.date>x.date?1:0}),tot=0,best=null,h="";
+  a.forEach(function(x){tot+=pts(x);if(!best||LV[x.lvl][1]>LV[best.lvl][1]||(x.lvl===best.lvl&&x.pl<best.pl))best=x});
+  if(a.length){
+    h+='<div class="stats">'+st(a.length,"results logged")+st(ord(best.pl)+" at "+LV[best.lvl][0],"best finish")+st(tot,"season points")+'</div><ul class="res">';
+    a.forEach(function(x){var p=x.date.split("-"),d=new Date(+p[0],+p[1]-1,+p[2]);
+      h+='<li class="'+(LV[x.lvl][1]>=8?"major":"")+'">'+badge(x)+'<div><b>'+ord(x.pl)+' place, '+LV[x.lvl][0]+'</b><span>'+(x.ev?esc(x.ev)+", ":"")+d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+'</span></div><em>+'+pts(x)+' pts</em><button class="link rm" data-id="'+x.id+'">Remove</button></li>'});
+    h+='</ul>'
+  }else h='<p class="fine">No results yet. Add your first one below.</p>';
+  $("season").innerHTML=h}
+$("season").onclick=function(e){var b=e.target.closest(".rm");if(!b)return;
+  if(b.dataset.arm){S.comp=S.comp.filter(function(x){return x.id!==b.dataset.id});save();season();return}
+  b.dataset.arm="1";b.textContent="Click again";setTimeout(function(){b.dataset.arm="";b.textContent="Remove"},3000)};
+$("cf").onsubmit=function(e){e.preventDefault();
+  var pl=parseInt($("cpl").value,10),dt=$("cdt").value,m=$("cmsg");
+  if(!(pl>=1&&pl<=99)){m.textContent="Enter your place as a number from 1 to 99.";return}
+  if(!dt){m.textContent="Choose the date of the competition.";return}
+  (S.comp=S.comp||[]).push({id:Date.now().toString(36),lvl:$("clvl").value,pl:pl,ev:$("cev").value.trim(),date:dt});save();
+  $("cpl").value="";$("cev").value="";m.textContent="Result added.";season()};
+/* Awards: [id, glyph, name, description, tier 1-4, stat, goal]. Tier sets the shape and color. */
+var A=[
+["c1","✓","First Steps","Complete your first lesson",1,"l",1],
+["c2","5","Getting Warm","Complete 5 lessons",1,"l",5],
+["c3","½","Halfway There","Complete half of the course",2,"done","half"],
+["c4","U","Unit Complete","Finish every item in one unit",2,"units",1],
+["c5","Q","Quiz Taker","Complete your first quiz",1,"qz",1],
+["c6","%","Perfect Score","Score 100% on a quiz",2,"perfect",1],
+["c7","★","Sharp Mind","Score 100% on 3 quizzes",3,"perfect",3],
+["c8","3","On a Roll","Study 3 days in a row",2,"streak",3],
+["c9","7","Dedicated","Study 7 days in a row",3,"streak",7],
+["c10","60","Hour of Power","Study for 60 minutes in total",2,"min",60],
+["c11","R","Field Investigator","Complete the role play",3,"r1",1],
+["c12","✦","Course Graduate","Complete every item in the course",4,"done","all"],
+["s1","1","On the Board","Log your first result",1,"n",1],
+["s2","3","Podium Finish","Place top 3 at any level",2,"pod",1],
+["s3","I","Invitational Champ","Win first place at an invitational",2,"inv1",1],
+["s4","R","Regional Competitor","Compete at Regionals (RLC)",2,"reg",1],
+["s5","R","Regional Medalist","Place top 3 at Regionals (RLC)",3,"regp",1],
+["s6","S","State Qualifier","Compete at States (SLC)",3,"st",1],
+["s7","S","State Medalist","Place top 3 at States (SLC)",4,"stp",1],
+["s8","S","State Champion","Win first place at States (SLC)",4,"st1",1],
+["s9","N","National Qualifier","Compete at Nationals (ILC)",4,"nat",1],
+["s10","N","National Medalist","Place top 3 at Nationals (ILC)",4,"natp",1],
+["s11","N","National Champion","Win first place at Nationals (ILC)",4,"nat1",1],
+["s12","3","Hat Trick","Place top 3 three times",3,"pod",3],
+["s13","100","Point Collector","Earn 100 season points",2,"pts",100],
+["s14","300","Point Machine","Earn 300 season points",3,"pts",300]
+];
+var SH={1:'<circle cx="24" cy="24" r="20"',2:'<polygon points="24,3 43,14 43,34 24,45 5,34 5,14"',3:'<path d="M24 3L42 10V24C42 35 34 42 24 46C14 42 6 35 6 24V10Z"',4:'<polygon points="24,2 30,18 47,18 33,28 38,45 24,35 10,45 15,28 1,18 18,18"'};
+var TC={1:"#b8733a",2:"#a9b4b8",3:"#e0a800",4:"#5fd6e8"};
+function goal(a){return a[6]==="half"?Math.ceil(ITEMS.length/2):a[6]==="all"?ITEMS.length:a[6]}
+function fk(k){var p=k.split("-");return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}
+function tally(){
+  var T={l:0,qz:0,done:0,units:0,perfect:0,min:0,streak:streak(),r1:S.done.r1?1:0,n:0,pod:0,inv1:0,reg:0,regp:0,st:0,stp:0,st1:0,nat:0,natp:0,nat1:0,pts:0},k;
+  ITEMS.forEach(function(i){if(S.done[i.id]){T.done++;if(i.k==="l")T.l++;if(i.k==="q")T.qz++}});
+  UNITS.forEach(function(u,ui){var it=ITEMS.filter(function(i){return i.u===ui});if(it.length&&it.every(function(i){return S.done[i.id]}))T.units++});
+  for(k in S.best)if(S.best[k]>=100)T.perfect++;
+  for(k in S.time)T.min+=S.time[k];T.min=Math.floor(T.min/60);
+  (S.comp||[]).forEach(function(x){T.n++;T.pts+=pts(x);var p=x.pl<=3;if(p)T.pod++;
+    if(x.lvl==="inv"&&x.pl===1)T.inv1++;
+    if(x.lvl==="reg"){T.reg++;if(p)T.regp++}
+    if(x.lvl==="st"){T.st++;if(p)T.stp++;if(x.pl===1)T.st1++}
+    if(x.lvl==="nat"){T.nat++;if(p)T.natp++;if(x.pl===1)T.nat1++}});
+  return T}
+var tt;
+function toast(n){var t=$("toast");if(!t)return;t.textContent=(n.length>1?"Awards unlocked: ":"Award unlocked: ")+n.join(", ");t.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("on")},4500)}
+function awards(){
+  var T=tally(),nw=[];S.aw=S.aw||{};
+  A.forEach(function(a){if(!S.aw[a[0]]&&T[a[5]]>=goal(a)){S.aw[a[0]]=dk();nw.push(a[2])}});
+  if(nw.length){persist();toast(nw)}}
+function abadge(t,g,on){
+  return '<span class="bdg'+(on&&t>=3?' spark':'')+(on&&t===4?' glow':'')+'"><svg viewBox="0 0 48 48" aria-hidden="true">'+SH[t]+' fill="'+(on?TC[t]:"var(--line)")+'" stroke="'+(on?"var(--ink)":"var(--muted)")+'" stroke-width="2.5" stroke-linejoin="round"/><text x="24" y="'+(t===4?31:29)+'" text-anchor="middle" font-size="'+(g.length>2?11:15)+'" font-weight="700" font-family="IBM Plex Sans,sans-serif" fill="'+(on?"#1a1a1a":"var(--muted)")+'">'+(on?g:"?")+'</text></svg></span>'}
+function awardsView(){
+  var T=tally(),h="";
+  [[1,"Bronze: getting started"],[2,"Silver: building momentum"],[3,"Gold: serious effort"],[4,"Diamond: elite"]].forEach(function(g){
+    var rows=A.filter(function(a){return a[4]===g[0]}),u=rows.filter(function(a){return S.aw[a[0]]}).length;
+    h+='<div class="awh"><span style="font:inherit;color:inherit">'+g[1]+'</span><span>'+u+' of '+rows.length+'</span></div><ul class="awg">';
+    rows.forEach(function(a){var have=S.aw[a[0]],gl=goal(a);
+      h+='<li class="aw'+(have?'':' lock')+'">'+abadge(a[4],a[1],have)+'<b>'+a[2]+'</b><span class="tg">'+(a[0][0]==="c"?"Course":"Season")+'</span><span>'+a[3]+'</span><em>'+(have?'Unlocked '+fk(have):Math.min(T[a[5]],gl)+' of '+gl)+'</em></li>'});
+    h+='</ul>'});
+  $("awards").innerHTML=h}
+function home(){
+  document.body.classList.remove("in-course","open");
+  var d=0,act=0,tot=0,k;for(k in S.done)d++;for(k in S.days)if(lvl(S.days[k]))act++;for(k in S.time)tot+=S.time[k];
+  $("stats").innerHTML=st(streak(),"day streak")+st(act,"active days")+st(fmt(tot),"time studied")+st(Math.round(d/ITEMS.length*100)+"%","complete");
+  heat();lists();season();awards();awardsView();if(!$("cdt").value)$("cdt").value=dk();
+  var t=S.days[dk()]||{s:0,c:0};
+  $("today").textContent="Today: "+Math.round(t.s/60)+" min studied, "+t.c+" completed.";
+  $("enter").textContent=d||tot?"Continue where you left off":"Start the course";
+  window.scrollTo(0,0)}
+$("enter").onclick=function(){location.hash=S.last||ITEMS[0].id};
+var cur=ITEMS[0];
+function fmt(s){s=s|0;var m=Math.floor(s/60),h=Math.floor(m/60);return h?h+"h "+(m%60)+"m":m+":"+("0"+(s%60)).slice(-2)}
+function idx(){return ITEMS.indexOf(cur)}
+
+function drawNav(){
+  var h="";
+  UNITS.forEach(function(u,ui){
+    var open=cur.u===ui?" open":"";
+    h+='<details'+open+'><summary>Unit '+(ui+1)+': '+u[0]+'</summary>';
+    ITEMS.filter(function(i){return i.u===ui}).forEach(function(i){
+      h+='<a href="#'+i.id+'"'+(i===cur?' aria-current="page"':'')+' class="'+(S.done[i.id]?"done":"")+'"><span class="dot"></span><span>'+i.t+(i.k!=="l"?' <span class="kind">('+KIND[i.k].toLowerCase()+')</span>':'')+'</span></a>';
+    });
+    if(!u[1].length)h+='<p class="kind" style="padding:.2rem .75rem .6rem 1.9rem;margin:0">Coming soon</p>';h+='</details>';
+  });
+  $("nav").innerHTML=h;
+  var d=ITEMS.filter(function(i){return S.done[i.id]}).length,p=Math.round(d/ITEMS.length*100);
+  $("pb").style.width=p+"%";
+  $("pt").textContent=d+" of "+ITEMS.length+" items complete ("+p+"%)";
+  $("pt2").textContent=p+"% complete";
+  drawTime();
+}
+function drawTime(){
+  var tot=0;for(var k in S.time)tot+=S.time[k];
+  $("tt").textContent="Time studied: "+fmt(tot);
+  var t=$("tm");if(t)t.textContent="Time on this page: "+fmt(S.time[cur.id]||0)+(S.done[cur.id]?" · Completed":"");
+}
+
+function drawQuiz(qs){
+  if(!qs){return '<p class="ph">Placeholder: this quiz has not been added yet.</p>'}
+  var h='<div id="qz">';
+  qs.forEach(function(q,i){
+    h+='<fieldset id="f'+i+'"><legend>Question '+(i+1)+'</legend><p>'+q.q+'</p>';
+    q.o.forEach(function(o,j){h+='<label><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>'});
+    h+='<p class="fb" id="fb'+i+'"></p></fieldset>';
+  });
+  var b=S.best[cur.id];
+  return h+'</div><button class="btn" id="chk">Check answers</button><div class="score" id="sc" role="status">'+(b!=null?'Best score: '+b+'%':'')+'</div>';
+}
+function wireQuiz(qs){
+  var c=$("chk");if(!c||!qs)return;
+  c.onclick=function(){
+    var right=0,ans=0;
+    qs.forEach(function(q,i){
+      var s=document.querySelector('input[name=q'+i+']:checked'),f=$("f"+i),fb=$("fb"+i);
+      if(!s){f.className="";fb.textContent="Choose an answer.";return}
+      ans++;var ok=+s.value===q.a;if(ok)right++;
+      f.className=ok?"right":"wrong";
+      fb.textContent=(ok?"Correct. ":"Not quite. The answer is “"+q.o[q.a]+"”. ")+q.e;
+    });
+    if(ans<qs.length){$("sc").textContent="Answer every question to see your score.";return}
+    var p=Math.round(right/qs.length*100);
+    S.best[cur.id]=Math.max(S.best[cur.id]||0,p);markDone(cur.id);
+    $("sc").textContent="You scored "+p+"% ("+right+" of "+qs.length+"). Best: "+S.best[cur.id]+"%.";
+    drawNav();
+  };
+}
+
+function show(id){
+  cur=ITEMS.filter(function(i){return i.id===id})[0]||ITEMS[0];
+  S.last=cur.id;save();
+  var u=UNITS[cur.u],body;
+  if(cur.k==="q")body=drawQuiz(quizOf(cur.id));
+  else if(cur.k==="l")body=(CONTENT[cur.id]?md(CONTENT[cur.id]):"")||'<p class="ph">Placeholder: this lesson’s text has not been added yet.</p>';
+  else body='<p class="ph">Placeholder: add the instructions for this '+KIND[cur.k].toLowerCase()+' here.</p>';
+  var i=idx(),prev=ITEMS[i-1],next=ITEMS[i+1];
+  var title=cur.k==="l"?"Lesson "+cur.num+": "+cur.t:cur.t;
+  var nxt=cur.k==="q"?(next?'<a class="btn" href="#'+next.id+'" style="text-decoration:none">Next</a>':''):'<button class="btn" id="go">'+(next?"Mark complete and continue":"Mark complete")+'</button>';
+  $("view").innerHTML='<p class="crumb">Unit '+(cur.u+1)+': '+u[0]+'</p><h1>'+title+'</h1><div class="tm" id="tm"></div><div class="body">'+body+'</div><div class="pager">'+(prev?'<a class="btn alt" href="#'+prev.id+'" style="text-decoration:none">Back</a>':'<span></span>')+nxt+'</div>'+(!next&&S.done[cur.id]?'<p class="score">You have reached the end of the course.</p>':'');
+  var g=$("go");if(g)g.onclick=function(){markDone(cur.id);if(next)location.hash=next.id;else{drawNav();show(cur.id)}};
+  wireQuiz(quizOf(cur.id));
+  drawNav();
+  document.body.classList.remove("open");
+  $("main").scrollTop=0;
+}
+
+/* Active-time tracking: counts only while the tab is visible and the student has done something in the last 60 seconds. */
+var lastAct=Date.now(),sv=0;
+["mousemove","keydown","scroll","touchstart","click"].forEach(function(e){addEventListener(e,function(){lastAct=Date.now()},{passive:true,capture:true})});
+setInterval(function(){
+  if(document.visibilityState!=="visible"||Date.now()-lastAct>60000||!document.body.classList.contains("in-course"))return;
+  S.time[cur.id]=(S.time[cur.id]||0)+1;day().s++;
+  if(++sv>=5){sv=0;save()}
+  drawTime();
+},1000);
+
+$("menu").onclick=function(){document.body.classList.toggle("open")};
+var armed=false;
+$("reset").onclick=function(){
+  var b=$("reset");
+  if(!armed){armed=true;b.textContent="Click again to confirm";setTimeout(function(){armed=false;b.textContent="Reset progress"},4000);return}
+  var keep={},k;for(k in S.aw||{})if(k[0]==="s")keep[k]=S.aw[k];S={done:{},time:{},best:{},last:null,days:{},comp:S.comp||[],aw:keep};save();armed=false;b.textContent="Reset progress";show(ITEMS[0].id);
+};
+function route(){var h=location.hash.slice(1);if(!h||h==="home"){home();return}document.body.classList.add("in-course");show(h)}
+addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>

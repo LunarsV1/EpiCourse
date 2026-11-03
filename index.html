@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disease Detectives: a free epidemiology course for HOSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400&family=Literata:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e7f0ee; --surface:#f7fbfa; --ink:#0c2a2c; --muted:#46635f; --accent:#0b7a75; --accent-ink:#fff; --line:#b9d0cc; --bar:#8fb3ae;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#08201f;--surface:#0f2f2d;--ink:#e3f2ef;--muted:#96b8b3;--accent:#3fd0c4;--accent-ink:#03211f;--line:#1f4744;--bar:#3f6f6a;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#08201f;--surface:#0f2f2d;--ink:#e3f2ef;--muted:#96b8b3;--accent:#3fd0c4;--accent-ink:#03211f;--line:#1f4744;--bar:#3f6f6a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.125rem/1.7 Literata,Georgia,serif}
+h1,h2,h3{font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.05;margin:0;letter-spacing:-.02em}
+h1{font-weight:800;font-size:clamp(2.5rem,6.5vw,4.6rem)}
+h2{font-weight:800;font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1.5rem}
+h3{font-weight:500;font-size:1.25rem}
+p{margin:0 0 1rem;max-width:62ch}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+section{padding:4.5rem 0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;font:800 1.1rem "IBM Plex Sans",system-ui,sans-serif}
+header.top a{color:var(--ink);font-weight:500;text-decoration:none}
+
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center;padding:3rem 0 5rem}
+.lede{font-size:1.25rem;color:var(--muted);margin:1.5rem 0 2rem}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font:500 1.05rem "IBM Plex Sans",system-ui,sans-serif;padding:.95rem 1.6rem;border:0;border-radius:6px;cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.meta{margin-top:1.25rem;color:var(--muted);font-size:1rem}
+#count{font-weight:600;color:var(--ink)}
+
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.25rem 1rem .75rem}
+.chart svg{width:100%;height:auto;display:block}
+.chart .bar{fill:var(--bar);transform-origin:bottom;transform-box:fill-box;transform:scaleY(0);animation:grow .5s ease-out forwards;animation-delay:calc(var(--i)*70ms)}
+.chart .idx{fill:var(--accent)}
+@keyframes grow{to{transform:scaleY(1)}}
+.chart text{font:500 11px "IBM Plex Sans",system-ui,sans-serif;fill:var(--muted)}
+.chart .note{fill:var(--accent);font-weight:800}
+.chart figcaption{color:var(--muted);font-size:.95rem;margin-top:.5rem}
+.chart{margin:0}
+
+.weeks{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.weeks li{padding:0 0 1.75rem 1.75rem;position:relative}
+.weeks li::before{content:"";position:absolute;left:-7px;top:.55rem;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+.weeks h3 span{color:var(--muted);font-weight:400;margin-right:.6rem}
+.weeks p{margin:.35rem 0 0;color:var(--muted)}
+
+.who{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start}
+.avatar{width:120px;height:120px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font:800 2.4rem "IBM Plex Sans",sans-serif;color:var(--accent-ink)}
+
+.enroll{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+.price{font:800 3.2rem "IBM Plex Sans",sans-serif}
+.enroll ul{padding-left:1.1rem;margin:1rem 0 0;color:var(--muted)}
+form label{display:block;font-weight:600;margin-bottom:.4rem}
+input[type=email]{width:100%;font:inherit;padding:.85rem 1rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);margin-bottom:1rem}
+#msg{margin-top:1rem;min-height:1.5em;font-weight:600}
+
+details{border-top:1px solid var(--line);padding:1rem 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font:500 1.15rem "IBM Plex Sans",system-ui,sans-serif}
+details p{margin:.75rem 0 0;color:var(--muted)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.5rem 2rem}
+.q p{max-width:none}
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.95rem}
+
+@media (max-width:760px){
+  .hero,.enroll,.who{grid-template-columns:1fr}
+  .enroll{padding:1.5rem}
+  .q{padding:1.25rem}
+}
+@media (prefers-reduced-motion:reduce){.chart .bar{animation:none;transform:none}}
+
+:root{--hot:#c2410c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hot:#ff8a5b}}
+:root[data-theme="dark"]{--hot:#ff8a5b}
+h1,h2,.price,.stat b,#home h2,.body h2,.brand{font-family:Fraunces,Georgia,serif;font-weight:800;letter-spacing:-.015em}
+.crumb,.stat span,.tm,.kind,.lg,.meta{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.chart .idx{fill:var(--hot)}.chart .note{fill:var(--hot)}
+.btn{border-radius:2px}
+.tag{display:inline-block;border:1px solid var(--ink);padding:.15rem .6rem;font:400 .8rem "IBM Plex Mono",ui-monospace,monospace;margin:0 0 1rem}
+body{background-image:radial-gradient(color-mix(in srgb,var(--ink) 14%,transparent) 1px,transparent 1.3px);background-size:24px 24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span>Disease Detectives</span><a href="#enroll">Start free</a></header>
+
+  <div class="hero">
+    <div>
+      <p class="tag">Case file 001: free course</p>
+      <h1>Find the source of the outbreak before the clock runs out.</h1>
+      <p class="lede">A free, self-paced epidemiology course written like an approachable textbook, with quizzes, an assignment, and a role play. Learn to read an epi curve, calculate attack rates, and work a case from first report to control measures.</p>
+      <a class="btn" href="course.html">Start the course</a>
+      <p class="meta">Seven units, 23 lessons. <strong>Go at your own pace</strong>, start any time.</p>
+    </div>
+    <figure class="chart">
+      <svg viewBox="0 0 360 230" role="img" aria-label="Epidemic curve showing cases per day rising to a peak and falling, with the first case marked">
+        <g stroke="var(--line)" stroke-width="1"><line x1="40" y1="190" x2="350" y2="190"/><line x1="40" y1="30" x2="40" y2="190"/></g>
+        <g id="bars"></g>
+        <text x="8" y="20">Cases</text>
+        <text x="260" y="222">Days since exposure</text>
+        <text class="note" x="58" y="150">First case</text>
+      </svg>
+      <figcaption>An epidemic curve: one picture that tells you when, how fast, and how it spread.</figcaption>
+    </figure>
+  </div>
+
+  <section id="learn">
+    <h2>What you will learn</h2>
+    <ol class="weeks">
+      <li><h3><span>Unit 1</span>Introduction to the course</h3><p>How the course works and how to get the most from it.</p></li>
+      <li><h3><span>Unit 2</span>Introduction to epidemiology</h3><p>What epidemiology is, clinical vs. public health, key terminology, the natural history of disease, and infectious vs. noninfectious diseases. Ends with a quiz.</p></li>
+      <li><h3><span>Unit 3</span>Epidemiological history</h3><p>How the field began, the epidemiologists who shaped it, and the health events that changed it. Ends with a quiz.</p></li>
+      <li><h3><span>Unit 4</span>Disease transmission and prevention</h3><p>The agent-host-environment triad, the chain of infection, modes of transmission, and prevention for different agents. Ends with an assignment.</p></li>
+      <li><h3><span>Unit 5</span>Public health surveillance</h3><p>The basics, the 5 steps of surveillance, and surveillance technologies. Ends with a role play: seek an unknown pathogen.</p></li>
+      <li><h3><span>Unit 6</span>Epidemiological data and visualization</h3><p>Epi curves, subdivided tables, line listings, and cluster maps. Ends with a quiz.</p></li>
+      <li><h3><span>Unit 7</span>Epidemiological calculations</h3><p>Measures of disease frequency, measures of effect, the “rates” formula, and diagnostic accuracy measures. Ends with a final test.</p></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Try one first</h2>
+    <div class="q">
+      <p>120 people attend a school picnic. 48 later develop vomiting and diarrhea. What is the attack rate?</p>
+      <details><summary>Show the answer</summary><p>Attack rate = ill ÷ exposed = 48 ÷ 120 = 0.40, or 40%. In the course, you will learn to compare attack rates for each food served to find the likely source.</p></details>
+    </div>
+  </section>
+
+  <section>
+    <div class="who">
+      <div class="avatar" aria-hidden="true">YN</div>
+      <div>
+        <h2>Taught by Your Name</h2>
+        <p>Replace this with a short bio: your background in public health or HOSA, and why you made this course. Add any placements or years of competing to build trust.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="enroll">
+    <div class="enroll">
+      <div>
+        <h2>Free. No catch.</h2>
+        <div class="price">$0</div>
+        <ul>
+          <li>23 plain-language lessons across 7 units</li>
+          <li>Quizzes, a unit assignment, and a final test</li>
+          <li>A role play: seek an unknown pathogen</li>
+        </ul>
+      </div>
+      <div><p>No account, email, or payment needed. Your progress and study activity are saved in your browser.</p><a class="btn" href="course.html">Start the course</a></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>Who is this course for?</summary><p>Middle school, high school, and postsecondary students preparing for HOSA Disease Detectives, and anyone curious about how outbreaks are solved.</p></details>
+    <details><summary>How does the course work?</summary><p>You read each unit’s lessons, then check what stuck with a quiz, an assignment, or a role play.</p></details>
+    <details><summary>Do I need a science background?</summary><p>No. If you can do basic fractions and percentages, you can follow along.</p></details>
+    <details><summary>Is it really free?</summary><p>Yes. There are no payments and no card required.</p></details>
+    <details><summary>Is this official HOSA material?</summary><p>No. It is an independent study course. Always check the current HOSA competitive events guidelines for your event.</p></details>
+  </section>
+
+  <footer>© 2026 Your Name. Not affiliated with or endorsed by HOSA-Future Health Professionals.</footer>
+</div>
+<script>
+(function(){
+  var data=[1,2,4,7,11,16,19,15,10,6,3,2], ns="http://www.w3.org/2000/svg", g=document.getElementById("bars");
+  data.forEach(function(v,i){
+    var h=v*7, r=document.createElementNS(ns,"rect");
+    r.setAttribute("x",46+i*25); r.setAttribute("y",190-h); r.setAttribute("width",22); r.setAttribute("height",h);
+    r.setAttribute("class","bar"+(i===0?" idx":"")); r.style.setProperty("--i",i);
+    g.appendChild(r);
+  });
+})();
+</script>
+</body>
+</html>
